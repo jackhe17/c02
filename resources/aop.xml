@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans
+xmlns="http://www.springframework.org/schema/beans"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xmlns:context="http://www.springframework.org/schema/context"
+xmlns:aop="http://www.springframework.org/schema/aop"  
+xsi:schemaLocation="http://www.springframework.org/schema/beans        
+					http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+					http://www.springframework.org/schema/context                
+					http://www.springframework.org/schema/context/spring-context-3.0.xsd
+					http://www.springframework.org/schema/aop  
+           			http://www.springframework.org/schema/aop/spring-aop-3.0.xsd">
+  
+  <bean id="helloworldService" class="com.jack.spring.c03.service.impl.HelloWorldService"/>
+  <bean id="beforeAdvice" class="cn.javass.spring.chapter6.aop.BeforeAdviceImpl"/> 
+  <bean id ="aspect" class="com.jack.spring.c03.aop.HelloWorldAspect"/>
+   <aop:config>
+  	<!-- <aop:pointcut id="pointcut" expression="execution(* com.jack..*.*(..))" /> -->
+  	<aop:pointcut id="pointcut" expression="execution(* com.jack.spring.c03.service.*.*(..))" />
+  	 <aop:aspect ref="aspect">
+  		<!-- <aop:before method="beforeAdvice(java.lang.String)" pointcut-ref="pointcut" /> -->
+  		 <aop:before pointcut="execution(* com.jack.spring.c03.service.*.*.sayBefore(..)) and args(param,i)"   
+                           method="beforeAdvice(java.lang.String,java.lang.Integer)"   
+                           arg-names="param,i"/>  
+  		<!-- <aop:after method="afterFinallyAdvice" pointcut-ref="pointcut"/> -->
+  		<aop:after-returning method="afterReturningAdvice"
+  		 pointcut="execution(* com.jack.spring.c03.service.*.*.sayAfterReturning(..))"
+  		 arg-names="retVal"  returning="retVal"/>
+  		 <aop:after-throwing pointcut-ref="pointcut" method="afterThrowingAdvice" arg-names="exception" throwing="exception"/>
+  		<aop:after method="afterFinallyAdvice" pointcut-ref="pointcut"/>
+  		<aop:around method="aroundAdvice" pointcut-ref="pointcut"/>
+  	</aop:aspect> 
+  </aop:config> 
+  
+   
+  
+</beans>
